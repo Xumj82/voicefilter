@@ -1,5 +1,35 @@
 # VoiceFilter
 
+## Windows WSL2 & CUDA installation
+
+for details please refer to [CUDA on WSL :: CUDA Toolkit Documentation (nvidia.com)](https://docs.nvidia.com/cuda/wsl-user-guide/index.html)
+
+1.Register for the [Windows Insider Program](https://insider.windows.com/en-us/getting-started/#register) and choose dev channel as your [flighting channel](https://docs.microsoft.com/en-us/windows-insider/flighting#switching-between-channels) (previously fast rings).
+
+2.Install the latest build from the [Dev Channel](https://insider.windows.com/en-us/getting-started#install). Review WSL 2 system requirements for minimum requirements and our recommendations. You can check   	your build version number by running winver via the Run command.
+
+3.Install wsl2: 
+
+   Open cmd and run command below with admin
+
+```bash
+	wsl --install
+```
+
+4.Open WSL
+
+5.Setup CUDA in WSL
+
+```
+$ wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+$ sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+$ wget https://developer.download.nvidia.com/compute/cuda/11.4.0/local_installers/cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
+$ sudo dpkg -i cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
+$ sudo apt-key add /var/cuda-repo-wsl-ubuntu-11-4-local/7fa2af80.pub
+$ sudo apt-get update
+$ sudo apt-get -y install cuda
+```
+
 ## Note from Seung-won (2020.10.25)
 
 Hi everyone! It's Seung-won from MINDs Lab, Inc.
@@ -71,10 +101,10 @@ Unofficial PyTorch implementation of Google AI's:
 
 1. Python and packages
 
-    This code was tested on Python 3.6 with PyTorch 1.0.1.
-    Other packages can be installed by:
+    This code was tested on Python 3.9 with PyTorch 1.9.0.
 
     ```bash
+    conda env create -f environment.yml
     pip install -r requirements.txt
     ```
 
@@ -115,6 +145,10 @@ Unofficial PyTorch implementation of Google AI's:
 
 1. Preprocess wav files
 
+    Open project with vscode and run with Preprocess
+    
+    or you can:
+    
     In order to boost training speed, perform STFT for each files before training by:
     ```bash
     python generator.py -c [config yaml] -d [data directory] -o [output directory] -p [processes to run]
