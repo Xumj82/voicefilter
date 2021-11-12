@@ -36,31 +36,29 @@ def predict(reference_wav,
             model,
             embedder
             ):
+    segement_wavs = audio_split(mixed_wav, segement_duration=30)
+    all_est_wav = []
     with torch.no_grad():
+        for segement in segement_wavs:
+            audio = Audio(hp)
+            dvec_mel = audio.get_mel(reference_wav)
+            dvec_mel = torch.from_numpy(dvec_mel).float().cuda()
+            dvec = embedder(dvec_mel)
+            dvec = dvec.unsqueeze(0)
 
-        audio = Audio(hp)
-        # dvec_wav, _ = librosa.load(reference_file, sr=16000)
-        dvec_mel = audio.get_mel(reference_wav)
-        dvec_mel = torch.from_numpy(dvec_mel).float().cuda()
-        dvec = embedder(dvec_mel)
-        dvec = dvec.unsqueeze(0)
+            mag, phase = audio.wav2spec(segement)
+            mag = torch.from_numpy(mag).float().cuda()
 
-        # mixed_wav, _ = librosa.load(mixed_file, sr=16000)
-        mag, phase = audio.wav2spec(mixed_wav)
-        mag = torch.from_numpy(mag).float().cuda()
+            mag = mag.unsqueeze(0)
+            mask = model(mag, dvec)
+            est_mag = mag * mask
 
-        mag = mag.unsqueeze(0)
-        mask = model(mag, dvec)
-        est_mag = mag * mask
-
-        est_mag = est_mag[0].cpu().detach().numpy()
-        est_wav = audio.spec2wav(est_mag, phase)
-
+            est_mag = est_mag[0].cpu().detach().numpy()
+            est_wav = audio.spec2wav(est_mag, phase)
+            all_est_wav.append(est_wav)
+        all_est_wav = np.array(all_est_wav).flatten()
+        all_est_wav, _ = librosa.effects.trim(all_est_wav, top_db=20)
         return est_wav
-        # os.makedirs(out_dir, exist_ok=True)
-        # out_path = os.path.join(out_dir, 'result.wav')
-        # # librosa.output.write_wav(out_path, est_wav, sr=16000)       
-        # sf.write(out_path, est_wav, 16000)
 
 def add_nosie(data,rate):
     noise_len = 2
