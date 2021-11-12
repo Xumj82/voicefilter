@@ -15,9 +15,9 @@ model:
   fc2_dim: 601 # num_freq
 ---
 data:
-  train_dir: 'output/train'
-  test_dir: 'output/test'
-  audio_len: 3.0
+  train_dir: 'mnt/h/voicefilter_data/train'
+  test_dir: 'mnt/h/voicefilter_data/test'
+  audio_len: 25.0
 ---
 form:
   input: '*-norm.wav'

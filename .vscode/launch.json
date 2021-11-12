@@ -5,15 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Current",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Train",
             "type": "python",
             "request": "launch",
             "program": "trainer.py",
             "console": "integratedTerminal",
             "args": [
-                "--config","config/default.yaml",
-                "--embedder_path","datasets/embedder.pt",
-                "--model","mytestMod"
+                "--config",
+                "config/default.yaml",
+                "--embedder_path",
+                "datasets/embedder.pt",
+                "--model",
+                "mytestMod"
             ]
         },
         {
@@ -26,11 +36,11 @@
                 "--config",
                 "config/default.yaml",
                 "--libri_dir",
-                "assets/LibriSpeech",
+                "/mnt/h/voicefilter_data/LibriSpeech/",
                 "--out_dir",
-                "output",
+                "/mnt/h/voicefilter_data/",
                 "--process_num",
-                "6" 
+                "6"
             ]
         }
     ]
